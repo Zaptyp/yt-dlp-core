@@ -348,6 +348,7 @@ export default class YTDlpWrap {
             let stringData = data.toString();
             YTDlpWrap.emitYoutubeDlEvents(stringData, readStream);
             stderrData += stringData;
+            console.log(data.toString());
         });
         ytDlpProcess.on('error', (error) => (processError = error));
 
@@ -356,6 +357,7 @@ export default class YTDlpWrap {
                 readStream.emit('close');
                 readStream.destroy();
                 readStream.emit('end');
+                console.log(stderrData);
             } else {
                 const error = YTDlpWrap.createError(
                     code,
