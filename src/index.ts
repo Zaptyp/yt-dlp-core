@@ -281,11 +281,12 @@ export default class YTDlpWrap {
         let stderrData = '';
         let processError: Error;
         ytDlpProcess.stdout.on('data', (data) =>
-            YTDlpWrap.emitYoutubeDlEvents(data.toString(), execEventEmitter)
+            YTDlpWrap.emitYoutubeDlEvents(data.toString(), execEventEmitter),
+            console.log(data.toString())
         );
         ytDlpProcess.stderr.on(
             'data',
-            (data) => (stderrData += data.toString())
+            (data) => (stderrData += data.toString()),
             console.log(stderrData)
         );
         ytDlpProcess.on('error', (error) => (processError = error));
