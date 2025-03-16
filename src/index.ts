@@ -286,7 +286,6 @@ export default class YTDlpWrap {
         ytDlpProcess.stderr.on(
             'data',
             (data) => (stderrData += data.toString())
-            console.log(stderrData)
         );
         ytDlpProcess.on('error', (error) => (processError = error));
 
