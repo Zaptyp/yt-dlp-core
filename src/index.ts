@@ -342,27 +342,27 @@ export default class YTDlpWrap {
             stdio: ['pipe', 'pipe', 'pipe'],
         });
         readStream.ytDlpProcess = ytDlpProcess;
-        //YTDlpWrap.bindAbortSignal(abortSignal, ytDlpProcess);
+        YTDlpWrap.bindAbortSignal(abortSignal, ytDlpProcess);
 
         let stderrData = '';
         let processError: Error;
         ytDlpProcess.stdout.on('data', (data) => {
-            console.log(`Received ${data.length} bytes`);
+            //console.log(`Received ${data.length} bytes`);
             readStream.push(data)
         });
         ytDlpProcess.stderr.on('data', (data) => {
             let stringData = data.toString();
-            console.log(`Received z errora ${data.length} bytes`);
+            //console.log(`Received z errora ${data.length} bytes`);
             YTDlpWrap.emitYoutubeDlEvents(stringData, readStream);
             stderrData += stringData;
-            console.log(data.toString());
+            //console.log(data.toString());
         });
         ytDlpProcess.on('error', (error) => (processError = error));
 
         ytDlpProcess.on('close', (code) => {
             if (code === 0 || ytDlpProcess.killed) {
                 readStream.push(null);
-                console.log(stderrData);
+                //console.log(stderrData);
             } else {
                 const error = YTDlpWrap.createError(
                     code,
