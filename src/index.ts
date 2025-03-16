@@ -355,14 +355,14 @@ export default class YTDlpWrap {
             //console.log(`Received z errora ${data.length} bytes`);
             YTDlpWrap.emitYoutubeDlEvents(stringData, readStream);
             stderrData += stringData;
-            //console.log(data.toString());
+            console.log(data.toString());
         });
         ytDlpProcess.on('error', (error) => (processError = error));
 
         ytDlpProcess.on('close', (code) => {
             if (code === 0 || ytDlpProcess.killed) {
                 readStream.push(null);
-                //console.log(stderrData);
+                console.log(stderrData);
             } else {
                 const error = YTDlpWrap.createError(
                     code,
