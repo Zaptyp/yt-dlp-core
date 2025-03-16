@@ -337,7 +337,10 @@ export default class YTDlpWrap {
 
         options = YTDlpWrap.setDefaultOptions(options);
         ytDlpArguments = ytDlpArguments.concat(['-o', '-']);
-        const ytDlpProcess = spawn(this.binaryPath, ytDlpArguments, options);
+        const ytDlpProcess = spawn(this.binaryPath, ytDlpArguments, {
+            ...options,
+            stdio: ['pipe', 'pipe', 'pipe'],
+        });
         readStream.ytDlpProcess = ytDlpProcess;
         //YTDlpWrap.bindAbortSignal(abortSignal, ytDlpProcess);
 
@@ -349,6 +352,7 @@ export default class YTDlpWrap {
         });
         ytDlpProcess.stderr.on('data', (data) => {
             let stringData = data.toString();
+            console.log(`Received z errora ${data.length} bytes`);
             YTDlpWrap.emitYoutubeDlEvents(stringData, readStream);
             stderrData += stringData;
             console.log(data.toString());
