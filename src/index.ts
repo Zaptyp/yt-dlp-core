@@ -28,6 +28,11 @@ type YTDlpEventNameDataTypeMap = {
     progress: [Progress];
     ytDlpEvent: [eventType: string, eventData: string];
 };
+interface Thumbnail {
+    url: string;
+    width: number;
+    height: number;
+}
 
 type YTDlpEventName = keyof YTDlpEventNameDataTypeMap;
 
@@ -380,7 +385,94 @@ export default class YTDlpWrap {
         let ytDlpStdout = await this.execPromise(['--list-extractors']);
         return ytDlpStdout.split('\n');
     }
-
+    static parseThumbnails(data: string): Thumbnail[] {
+        return data
+          .split('\n')
+          .slice(1)
+          .map(line => {
+            const parts = line.trim().split(/\s+/);
+            const id = parts.shift();
+            const width = parts.shift();
+            const height = parts.shift();
+            const url = parts.join(' ');
+      
+            if (width === 'unknown' || height === 'unknown') {
+              return null;
+            }
+            const parsedWidth = width ? parseInt(width, 10) : NaN;
+            const parsedHeight = height ? parseInt(height, 10) : NaN;
+            return {
+              url,
+              width: parsedWidth,
+              height: parsedHeight,
+            };
+          })
+          .filter((item): item is Thumbnail => item !== null);
+      
+    }
+    async validateURL(url: string): Promise<boolean> {
+        let ytDlpStdout = await this.execPromise([url, '--dump-json']);
+        let ytDlpJSON = JSON.parse(ytDlpStdout);
+        try {
+            if (ytDlpJSON.extractor == "youtube") {
+                return true;
+            }
+            return false;
+        } catch (e) {
+            return false;
+        }
+    }
+    async getBasicInfo(url: string): Promise<any> {
+        let ytDlpStdout = await this.execPromise([url, '-O','%(.{channel_follower_count,channel_is_verified,age_limit,original_url,like_count,thumbnails_table,title,description,duration,channel_url,channel_id,availability,view_count,categories,release_date,is_live,creator,uploader_url,upload_date,uploader,tags,id,timestamp})#j', '-s']);
+        let ytDlpJSON = JSON.parse(ytDlpStdout);
+        return {
+            videoDetails: {
+                title: ytDlpJSON.title,
+                description: ytDlpJSON.description,
+                lengthSeconds: ytDlpJSON.duration,
+                ownerProfileUrl: ytDlpJSON.uploader_url,
+                externalChannelId: ytDlpJSON.channel_id,
+                isFamilySafe: null,
+                avalableCountries: null,
+                isUnlisted: ytDlpJSON.availability == 'unlisted',
+                hasYpcMetadata: null,
+                viewCount: ytDlpJSON.view_count,
+                category: ytDlpJSON.categories,
+                publishDate: new Date(ytDlpJSON.timestamp * 1000),
+                ownerChannelName: ytDlpJSON.creator,
+                isShortsEgliable: null,
+                externalVideoId: ytDlpJSON.id,
+                videoId: ytDlpJSON.id,
+                keywords: ytDlpJSON.tags,
+                channelId: ytDlpJSON.channel_id,
+                isOwnerViewing: null,
+                isCrawlable: null,
+                allowRatings: ytDlpJSON.like_count != 0,
+                author: {
+                    id: ytDlpJSON.channel_id,
+                    name: ytDlpJSON.uploader,
+                    user: ytDlpJSON.uploader,
+                    channel_url: ytDlpJSON.channel_url,
+                    external_channel_id: ytDlpJSON.channel_url,
+                    user_url: ytDlpJSON.uploader_url,
+                    thumbnails: null,
+                    verified: ytDlpJSON.channel_is_verified,
+                    subscriber_count: ytDlpJSON.channel_follower_count,
+                },
+                isPrivate: ytDlpJSON.availability == 'private',
+                isUnpluggedCorpus: null,
+                isLiveContent: ytDlpJSON.is_live,
+                media: {},
+                likes: ytDlpJSON.like_count,
+                age_restricted: ytDlpJSON.age_limit == 18,
+                video_url: ytDlpJSON.original_url,
+                storyboards: [],
+                chapters: null,
+                thumbnails: YTDlpWrap.parseThumbnails(ytDlpJSON.thumbnails_table)
+            },
+        };
+    }
+    
     async getExtractorDescriptions(): Promise<string[]> {
         let ytDlpStdout = await this.execPromise(['--extractor-descriptions']);
         return ytDlpStdout.split('\n');
