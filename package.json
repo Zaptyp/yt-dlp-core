@@ -6,6 +6,7 @@
         "dist"
     ],
     "main": "dist/index.js",
+    "type": "module",
     "scripts": {
         "prepare": "tsc",
         "build": "tsc",
