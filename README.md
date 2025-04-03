@@ -1,9 +1,10 @@
-# yt-dlp-wrap-plus
+# yt-dlp-core
 
-This is a fork of yt-dlp-wrap with some modifications (Downloads full executable for linux and fixed problems with progress).
+This is a fork of yt-dlp-wrap-plus (itself a fork of yt-dlp-wrap) with modifications, including downloading the full executable for Linux and fixing the progress issues.
 
-![](https://github.com/aandrew-me/yt-dlp-wrap-plus-plus/workflows/CI%20tests/badge.svg)
-<a href="https://npmjs.org/package/yt-dlp-wrap-plus" title="View this project on NPM"><img src="https://img.shields.io/npm/v/yt-dlp-wrap-plus.svg" alt="NPM version" /></a>
+![NPM License](https://img.shields.io/npm/l/yt-dlp-core)
+![NPM Version](https://img.shields.io/npm/v/yt-dlp-core)
+
 
 A simple node.js wrapper for [yt-dlp](https://github.com/yt-dlp/yt-dlp).
 
@@ -15,20 +16,20 @@ A simple node.js wrapper for [yt-dlp](https://github.com/yt-dlp/yt-dlp).
 
 ## Installation
 
-You can install yt-dlp-wrap-plus via npm (`npm i yt-dlp-wrap-plus`).  
+You can install yt-dlp-core via npm (`npm i yt-dlp-core`).  
 YT-dlp itself will not be automatically downloaded.  
 Provide it yourself or use some of the following functions to download the binary.
 
 Typescript (only import differs)
 
 ```typescript
-import YTDlpWrap from 'yt-dlp-wrap-plus';
+import YTDlpWrap from 'yt-dlp-core';
 ```
 
 Javascript
 
 ```javascript
-const YTDlpWrap = require('yt-dlp-wrap-plus').default;
+const YTDlpWrap = require('yt-dlp-core').default;
 
 //Get the data from the github releases API. In this case get page 1 with a maximum of 5 items.
 let githubReleasesData = await YTDlpWrap.getGithubReleases(1, 5);
@@ -58,7 +59,7 @@ The log message `[download] Destination: output.mp4` will emit the event type `d
 `ytDlpEmitter.ytDlpProcess` exposes the spawned yt-dlp process.
 
 ```javascript
-const YTDlpWrap = require('yt-dlp-wrap-plus').default;
+const YTDlpWrap = require('yt-dlp-core').default;
 const ytDlpWrap = new YTDlpWrap('path/to/yt-dlp/binary');
 
 let ytDlpEventEmitter = ytDlpWrap
@@ -162,6 +163,11 @@ let help = await ytDlpWrap.getHelp();
 let extractors = await ytDlpWrap.getExtractors();
 let extractorDescriptions = await ytDlpWrap.getExtractorDescriptions();
 ```
+
+## Original authors
+[foxesdocode](https://github.com/foxesdocode) - Original author of yt-dlp-wrap
+
+[aandrew-me](https://github.com/aandrew-me) - Author of yt-dlp-wrap-plus
 
 ## License
 
