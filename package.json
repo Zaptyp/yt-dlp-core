@@ -1,6 +1,6 @@
 {
-    "name": "yt-dlp-wrap-plus",
-    "version": "2.3.19",
+    "name": "yt-dlp-core",
+    "version": "2.4.0",
     "description": "A simple node.js wrapper for yt-dlp.",
     "files": [
         "dist"
@@ -12,24 +12,22 @@
         "build": "tsc",
         "test": "node test/index.js"
     },
-    "author": "aandrew-me",
+    "author": "Zaptyp",
     "repository": {
         "type": "git",
-        "url": "https://github.com/aandrew-me/yt-dlp-wrap-plus.git"
+        "url": "https://github.com/Zaptyp/yt-dlp-core.git"
     },
     "keywords": [
         "youtube-dl",
         "youtube-dl-wrapper",
         "youtube-downloader",
-        "nodejs",
         "yt-dlp",
-        "yt-dlp-wrapper",
-        "yt-dlp-wrapper-plus"
+        "yt-dlp-wrapper"
     ],
     "license": "MIT",
     "devDependencies": {
         "@types/mocha": "^10.0.10",
-        "@types/node": "^22.13.11",
+        "@types/node": "^22.14.0",
         "mocha": "^11.1.0",
         "ts-node": "^10.9.2",
         "typescript": "^5.8.2"
